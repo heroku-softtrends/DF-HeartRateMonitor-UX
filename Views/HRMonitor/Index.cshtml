@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Heart Rate Monitor Goals";
+}
+
+<div class="hrm-content">
+    <table class="hr-monitor">
+        <tr>
+            <td>
+                <img src="~/images/reartrate.png" alt="bpm" />
+            </td>
+        </tr>
+        <tr>
+            <td class="hr-monitor-action">
+                <p>
+                    <label id="lblbpm"></label>
+                    <input type="hidden" id="bpm" value="100">
+                </p>
+                <div id="slider-range-min" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                    <div class="ui-slider-range ui-corner-all ui-widget-header ui-slider-range-min" style="width: 5.15021%;">
+                    </div><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 5.15021%;"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="lblMessage" style="margin-top:30px;">&nbsp;</div>
+                <input id="btnSend" type="button" value="Start Sending Data" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var urlAction = '/HRMonitor/SendData';
+        var isSentData = false;
+        var isProcessStarted = false;
+        var startProcess, btnText, btnBgColor;
+
+        $(function () {
+            $('#spinner').hide();
+            $("#lblbpm").text('BPM: ' + $("#bpm").val());
+
+            $("#slider-range-min").slider({
+                range: "min",
+                value: 100,
+                min: 100,
+                max: 200,
+                slide: function (event, ui) {
+                    $("#lblbpm").text('BPM: ' + ui.value);
+                    $("#bpm").val(ui.value);
+                }
+            });
+
+            $('#btnSend').on('click', function (e) {
+                isSentData = !isSentData;
+                btnText = btnBgColor = undefined;
+
+                if (isSentData && startProcess == undefined) {
+                    $('#lblMessage').css({ 'background-color': '' }).html('&nbsp;');
+                    startSendingData();
+                    startProcess = setInterval(function () { startSendingData() }, 5000);
+                }
+                else {
+                    stopSendingData();
+                }
+            });
+        });
+
+        function stopSendingData() {
+            isSentData = false;
+            isProcessStarted = false;
+            if (startProcess) {
+                clearInterval(startProcess);
+                startProcess = undefined;
+            }
+            if ($) {
+                $('#btnSend').attr('value', 'Start Sending Data');
+                $('#lblMessage').css({ 'background-color': '' }).html('&nbsp;');
+                $('#spinner').hide();
+            }
+        }
+
+        function startSendingData() {
+            if (isProcessStarted)
+                return;
+            isSentData = true;
+            isProcessStarted = true;
+            if (isSentData && $ && $("#bpm").val().length > 0) {
+                $('#btnSend').attr('value', (isSentData ? 'Stop Sending Data' : 'Start Sending Data'));
+                var bpmVal = parseInt($("#bpm").val());
+                $('#spinner').show();
+                $.post(urlAction, { heartRate: bpmVal }, function (data) {
+                    isSentData = false;
+                    isProcessStarted = false;
+                    $('#spinner').hide();
+                    if (data) {
+                        console.log(data);
+                        if (data.indexOf("Done") != -1) {
+                            btnBgColor = "green";
+                            btnText = "Done! Start Exercising";
+                            isSentData = false;
+                            isProcessStarted = false;
+                            if (startProcess) {
+                                clearInterval(startProcess);
+                                startProcess = undefined;
+                            }
+                            $('#btnSend').attr('value', 'Start Sending Data');
+                        }
+                        else if (data.indexOf("Exercise More") != -1) {
+                            btnBgColor = "yellow";
+                            btnText = "Exercise More";
+                        }
+                        else if (data.indexOf("Take a Break") != -1) {
+                            btnBgColor = "red";
+                            btnText = "Take a Break";
+                        }
+                        else if (data.indexOf("Keep Exercising") != -1) {
+                            btnBgColor = "green";
+                            btnText = "Keep Exercising";
+                        }
+                    }
+
+                    if (btnText && btnBgColor) {
+                        $('#lblMessage').css({
+                            'background-color': btnBgColor, 'color': 'white',
+                            'padding': '2px',
+                            'text-align': 'center'
+                        }).html(btnText);
+                        return;
+                    }
+                    else {
+                        $('#lblMessage').css({
+                            'background-color': 'red', 'color': 'white',
+                            'padding': '2px',
+                            'text-align': 'center'
+                        }).html('Heart Rate Goal');
+                    }
+                });
+            }
+        }
+    </script>
+}

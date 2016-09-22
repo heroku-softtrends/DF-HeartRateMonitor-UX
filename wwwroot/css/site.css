@@ -1,0 +1,87 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.clear {
+    clear: both;
+}
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.sendbtn {
+    padding: 2px;
+    background-color: #f6931f;
+    border: 2px solid #337ab7;
+    color: white;
+    width: 100%;
+}
+
+/* Carousel */
+.carousel-caption p {
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+/* Make .svg files in the carousel display properly in older browsers */
+.carousel-inner .item img[src$=".svg"] {
+    width: 100%;
+}
+
+/* Hide/rearrange for smaller screens */
+@media screen and (max-width: 767px) {
+    /* Hide captions */
+    .carousel-caption {
+        display: none;
+    }
+}
+
+.hrm-content {
+    margin-top: 0.25%;
+    width: 292px;
+    height: 600px;
+    background: url(../images/onlydevice.png) no-repeat;
+    position: relative;
+    top: 20%;
+    left: 35%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.hr-monitor {
+    position: relative;
+    top: 97px;
+    left: 36px;
+}
+
+    .hr-monitor input[type=button] {
+        background-color: #f6931f;
+        color: white;
+        width: 100%;
+        margin-top: 4px;
+        padding: 0.8em;
+        border: 2px solid #337ab7;
+    }
+
+    .hr-monitor label {
+        margin-top: 3em;
+        font-size: 11px;
+        color: gray;
+    }
+
+    .hr-monitor .ui-slider {
+        margin: 8px 0px 0px 2px;
+    }

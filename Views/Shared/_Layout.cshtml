@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Heart Rate Monitor</title>
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/lib/jquery/dist/css/jquery-ui.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/lib/jquery/dist/css/jquery-ui.css" rel="stylesheet" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <style type="text/css">
+        body .hr-monitor-action {
+            display: block;
+            position: relative;
+        }
+
+        #spinner {
+            display: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -45px;
+            right: 0;
+            text-align: center;
+            background: url('/images/ajax-loader.gif') no-repeat center #fff;
+            padding: 10px;
+            font: normal 16px Tahoma, Geneva, sans-serif;
+            border: 1px solid #666;
+            z-index: 2;
+            opacity: 0.5;
+        }
+    </style>
+    @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a herf="javascript:void(0);" class="navbar-brand">Heart Rate Monitor</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="HRMonitor" asp-action="Index">Heart Rate Monitor Goals</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2016 - Heart Rate Monitor by Softtrends</p>
+        </footer>
+    </div>
+    <div id="spinner" style="display:block;"></div>
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/js/jquery.js"></script>
+        <script src="~/lib/jquery/dist/js/jquery-ui.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/js/jquery.js"></script>
+        <script src="~/lib/jquery/dist/js/jquery-ui.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(function () {
+            $('#spinner').hide();
+        });
+    </script>
+</body>
+</html>
